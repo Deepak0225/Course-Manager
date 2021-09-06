@@ -1,0 +1,147 @@
+<html lang="en" xmlns="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Add course</title>
+</head>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+	crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link href="/styleSheet/user/home.css" rel="stylesheet">
+
+<style>
+.form-group {
+	padding: 6px;
+}
+.card{
+	margin:auto;}
+</style>
+<body>
+	<nav
+		class="navbar navbar-dark bg-dark navbar-expand-lg navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-brand">
+				Welcome <span th:text="${user.firstname}"> </span> <span
+					th:text="${user.lastname}"> </span>
+			</div>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+
+				<div class="d-flex">
+					<a class="btn btn-outline-light me-2" th:href="@{/home}"> <i class="fas fa-home"></i> Home </a> 
+					<a class="btn btn-outline-light me-1" th:href="@{/logout}">Logout</a>
+				</div>
+			</div>
+		</div>
+	</nav>
+	<!-- The sidebar -->
+	<div class="w3-sidebar w3-bar-block w3-card w3-animate-left"
+		style="display: none" id="mySidebar">
+		<button class="w3-bar-item w3-button w3-large" onclick="w3_close()">Close
+			&times;</button>
+		<div class="sidebar">
+			<a th:href="@{/user/home}">Dashboard</a> 
+			<a th:href="@{/user/profile}">Profile</a> 
+			<a class="active" th:href="@{/user/add_course}">Add Course</a>
+			<a th:href="@{/user/show-course}">View Courses</a> 
+				
+		</div>
+	</div>
+
+	<div id="main">
+		<button id="openNav" class="w3-button w3-teal w3-xlarge"
+			onclick="w3_open()">&#9776;</button>
+	<div class="container">
+		<div class="card col-md-8 justify-content-md-center">
+			<div th:if="${session.message}"
+				th:classappend="${session.message.type}" class="alert" role="alert">
+				<p th:text="${session.message.content}"></p>
+				<th:block th:text="${#session.removeAttribute('message')}">
+				</th:block>
+			</div>
+			<div class="card-header text-center bg-dark text-white">
+				<h1>Add Course</h1>
+			</div>
+			<div class="card-body">
+				<form th:action="@{/user/process_course}" method="post"
+					th:object="${course}">
+					<div class="form-group">
+						<label for="courseName">Course Name</label> <input type="text"
+							class="form-control" name="courseName" placeholder="Course name"
+							required>
+					</div>
+
+					<div class="form-group">
+						<label for="courseID">Course ID</label> <input type="number"
+							class="form-control" name="courseID" placeholder="Course id"
+							required>
+					</div>
+
+					<div class="form-group">
+						<label for="courseProficiencyLevel">Proficiency Level</label> <select
+							name="courseProficiencyLevel" class="form-control" required>
+							<option>E0</option>
+							<option>E1</option>
+							<option>E2</option>
+							<option>E4</option>
+							<option>E5</option>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label for="courseDuration">Course Duration(Months)</label> <input
+							type="number" class="form-control" name="courseDuration"
+							placeholder="Course duration" required>
+					</div>
+
+					<div class="form-group">
+						<label for="courseCompletionDate">Course Completion Date</label> <input
+							type="date" class="form-control" name="courseCompletionDate"
+							required>
+					</div>
+
+					<div class="form-group">
+						<label for="courseDescription">Course Description</label>
+						<textarea class="form-control" name="courseDescription" rows="5"></textarea>
+					</div>
+					<div class="text-center mx-auto p-2">
+						<button type="submit" class="btn btn-dark btn-lg ">Add Course</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+	<script>
+		function w3_open() {
+			document.getElementById("main").style.marginLeft = "16.2%";
+			document.getElementById("mySidebar").style.width = "16.2%";
+			document.getElementById("mySidebar").style.display = "block";
+			document.getElementById("openNav").style.display = 'none';
+		}
+		function w3_close() {
+			document.getElementById("main").style.marginLeft = "0%";
+			document.getElementById("mySidebar").style.display = "none";
+			document.getElementById("openNav").style.display = "inline-block";
+		}
+	</script>
+</body>
+
+</html>

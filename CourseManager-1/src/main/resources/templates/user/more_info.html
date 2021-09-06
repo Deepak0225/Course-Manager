@@ -1,0 +1,124 @@
+<html lang="en" xmlns="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Course info</title>
+</head>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+	crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link href="/styleSheet/user/home.css" rel="stylesheet">
+
+
+<body>
+	<nav
+		class="navbar navbar-dark bg-dark navbar-expand-lg navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-brand">
+				Welcome <span th:text="${user.firstname}"> </span> <span
+					th:text="${user.lastname}"> </span>
+			</div>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+
+				<div class="d-flex">
+					<a class="btn btn-outline-light me-2" th:href="@{/home}"> <i class="fas fa-home"></i> Home</a> <a
+						class="btn btn-outline-light me-2" th:href="@{/logout}">Logout</a>
+				</div>
+			</div>
+		</div>
+	</nav>
+	<!-- The sidebar -->
+	<div class="w3-sidebar w3-bar-block w3-card w3-animate-left"
+		style="display: none" id="mySidebar">
+		<button class="w3-bar-item w3-button w3-large" onclick="w3_close()">Close
+			&times;</button>
+		<div class="sidebar">
+			<a class="active" th:href="@{/user/home}">Dashboard</a> 
+			<a th:href="@{/user/profile}">Profile</a> 
+			 <a th:href="@{/user/add-course}">Add
+				Course</a> 
+				<a th:href="@{/user/show-course}">View Courses</a>
+		</div>
+	</div>
+
+	<div id="main">
+
+		<button id="openNav" class="w3-button w3-teal w3-xlarge"
+			onclick="w3_open()">&#9776;</button>
+
+		<div class="container">
+			<div class="card">
+				<div class="card-header text-center bg-dark text-white">
+					<h1>Course Info</h1>
+				</div>
+				<div class="card-body">
+					<table class="table table-bordered">
+						<tbody>
+							<tr>
+								<th scope="col">Course Name</th>
+								<th scope="col"><span th:text="${course.courseName}"></span></th>
+							</tr>
+							<tr>
+								<th scope="col">Course ID</th>
+								<th scope="col"><span th:text="${course.courseID}"></span></th>
+							</tr>
+							<tr>
+								<th scope="col">Proficiency Level</th>
+								<th scope="col"><span
+									th:text="${course.courseProficiencyLevel}"></span></th>
+							</tr>
+							<tr>
+								<th scope="col">Duraion(Months)</th>
+								<th scope="col"><span th:text="${course.courseDuration}"></span></th>
+							</tr>
+							<tr>
+								<th scope="col">Completion Date</th>
+								<th scope="col"><span
+									th:text="${course.courseCompletionDate}"></span></th>
+							</tr>
+							<tr>
+								<th scope="col">Description</th>
+								<th scope="col"><span th:text="${course.courseDescription}"></span></th>
+							</tr>
+
+						</tbody>
+					</table>
+
+</div>
+	</div>
+	</div>
+	</div>
+	<script>
+		function w3_open() {
+			document.getElementById("main").style.marginLeft = "16.2%";
+			document.getElementById("mySidebar").style.width = "16.2%";
+			document.getElementById("mySidebar").style.display = "block";
+			document.getElementById("openNav").style.display = 'none';
+		}
+		function w3_close() {
+			document.getElementById("main").style.marginLeft = "0%";
+			document.getElementById("mySidebar").style.display = "none";
+			document.getElementById("openNav").style.display = "inline-block";
+		}
+	</script>
+</body>
+
+</html>
