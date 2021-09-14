@@ -12,6 +12,7 @@ public class CustomUserDerailsImplement implements UserDetailsService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		

@@ -3,19 +3,24 @@ package com.courseManager.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.courseManager.entities.User;
 import com.courseManager.entities.UserRepository;
+import com.courseManager.helper.AuthDetails;
 import com.courseManager.helper.Message;
+import com.courseManager.jwtToken.jwtutil;
 
 
 @Controller
@@ -23,6 +28,25 @@ public class MainController {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private jwtutil jwtUtil;
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	
+	@GetMapping("/token")
+	@ResponseBody
+	public String GenerateToken(@RequestBody AuthDetails authdetails) {
+		try {
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authdetails.getUsername(), authdetails.getPassword()));
+			return jwtUtil.generateToken(authdetails.getUsername());
+		} catch (Exception e) {
+			System.out.println("Invalid username or password");
+			return "Invalid username or password";
+		}
+		
+	}
 	
 	@GetMapping("/home")
 	public String homepage() {
