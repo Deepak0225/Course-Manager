@@ -3,9 +3,12 @@ package com.courseManager.controller;
 import java.security.Principal;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -35,19 +38,31 @@ public class UserController {
 	@Autowired
 	private coursedetailsRepository coursedetailsRepository;
 	
+	@Autowired
+	private AuthenticationManager authenticationManager;
 	
-	public UserDetails userdetails=(UserDetails) SecurityContextHolder.getContext().getAuthentication();
+	@GetMapping("/testing")
+	@ResponseBody
+	public String testing(HttpServletResponse response,HttpServletRequest request,HttpSession session) {
+		
+		System.out.println(response.getHeader("token"));
+		String ok=response.getHeader("token");
+		return ok;
+	}
 	
-	
-	@ModelAttribute
-	public void addCommonData(Model model) {
-		String userName=userdetails.getUsername();
+	/*
+	 * @ModelAttribute
+	 
+	public void addCommonData(Model model,Principal principal) {
+		String userName=principal.getName();
 		User user=userRepository.getUserByUsername(userName);
 		model.addAttribute("user", user);
 	}
+	*/
+	
 	@GetMapping("/home")
-	public String home(Model model) {
-		String userName=userdetails.getUsername();
+	public String home(Model model,Principal principal) {
+		String userName=principal.getName();
 		User user=userRepository.getUserByUsername(userName);
 		int length=user.getCourses().size();
 		model.addAttribute("length", length);
