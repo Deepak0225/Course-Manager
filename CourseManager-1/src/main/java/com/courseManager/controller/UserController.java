@@ -1,5 +1,6 @@
 package com.courseManager.controller;
 
+import java.net.http.HttpRequest;
 import java.security.Principal;
 import java.util.List;
 
@@ -25,6 +26,8 @@ import com.courseManager.entities.UserRepository;
 import com.courseManager.entities.coursedetails;
 import com.courseManager.entities.coursedetailsRepository;
 import com.courseManager.helper.Message;
+import com.courseManager.jwtToken.jwtutil;
+
 import org.springframework.security.core.userdetails.UserDetails;
 
 
@@ -39,33 +42,34 @@ public class UserController {
 	private coursedetailsRepository coursedetailsRepository;
 	
 	@Autowired
+	private jwtutil jwtUtil;
+	
+	@Autowired
 	private AuthenticationManager authenticationManager;
 	
-	@GetMapping("/testing")
-	@ResponseBody
-	public String testing(HttpServletResponse response,HttpServletRequest request,HttpSession session) {
+	
+	
+	
+	@ModelAttribute
+	public void addCommonData(Model model,HttpServletResponse response) {
+		String token=response.getHeader("token");
+		System.out.println(token);
+		if (token!=null) {
+			String userName=jwtUtil.extractUsername(token);
+			User user=userRepository.getUserByUsername(userName);
+			model.addAttribute("user", user);
+		}
 		
-		System.out.println(response.getHeader("token"));
-		String ok=response.getHeader("token");
-		return ok;
 	}
 	
-	/*
-	 * @ModelAttribute
-	 
-	public void addCommonData(Model model,Principal principal) {
-		String userName=principal.getName();
-		User user=userRepository.getUserByUsername(userName);
-		model.addAttribute("user", user);
-	}
-	*/
 	
 	@GetMapping("/home")
-	public String home(Model model,Principal principal) {
-		String userName=principal.getName();
-		User user=userRepository.getUserByUsername(userName);
-		int length=user.getCourses().size();
+	public String home(Model model,HttpServletResponse response) {
+		String token=response.getHeader("token");
+		String userName=jwtUtil.extractUsername(token);
+		int length=userRepository.getUserByUsername(userName).getCourses().size();
 		model.addAttribute("length", length);
+
 		return "user/home";
 	}
 	
@@ -81,9 +85,10 @@ public class UserController {
 	}
 	
 	@PostMapping("/process_course")
-	public String processCours(@ModelAttribute coursedetails course,Principal principal,HttpSession session) {
+	public String processCours(@ModelAttribute coursedetails course,HttpServletResponse response,HttpSession session) {
 		try {
-			String userName=principal.getName();
+			String token=response.getHeader("token");
+			String userName=jwtUtil.extractUsername(token);
 			User user=userRepository.getUserByUsername(userName);
 			course.setUser(user);
 			user.getCourses().add(course);
@@ -97,8 +102,9 @@ public class UserController {
 	}
 	
 	@GetMapping("/show-course")
-	public String showCourse(Model model,Principal principal){
-		String userName=principal.getName();
+	public String showCourse(Model model,HttpServletResponse response){
+		String token=response.getHeader("token");
+		String userName=jwtUtil.extractUsername(token);
 		User user=userRepository.getUserByUsername(userName);
 		List<coursedetails> courseList=user.getCourses();
 		model.addAttribute("courseList", courseList);
@@ -113,8 +119,9 @@ public class UserController {
 	}
 	
 	@RequestMapping("/more-info/{idc}")
-	public String moreInfo(@PathVariable("idc") Integer idc,Model model,Principal principal,HttpSession session){
-		String userName=principal.getName();
+	public String moreInfo(@PathVariable("idc") Integer idc,Model model,HttpServletResponse response,HttpSession session){
+		String token=response.getHeader("token");
+		String userName=jwtUtil.extractUsername(token);
 		User user=userRepository.getUserByUsername(userName);
 		try {
 			
@@ -137,11 +144,12 @@ public class UserController {
 	}
 	
 	@PostMapping("/process_update")
-	public String processUpdate(@ModelAttribute coursedetails course,Principal principal,Model model,HttpSession session) {
+	public String processUpdate(@ModelAttribute coursedetails course,HttpServletResponse response,Model model,HttpSession session) {
 		
 		try {
 			coursedetails oldCourse=coursedetailsRepository.getById(course.getIdc());
-			String userName=principal.getName();
+			String token=response.getHeader("token");
+			String userName=jwtUtil.extractUsername(token);
 			User user=userRepository.getUserByUsername(userName);
 			course.setUser(user);
 			coursedetailsRepository.save(course);
@@ -156,8 +164,9 @@ public class UserController {
 		}
 	}
 	@RequestMapping("/delete-course/{idc}")
-	public String deleteCourse(@PathVariable("idc") Integer idc,HttpSession session,Principal principal,Model model) {
-		String userName=principal.getName();
+	public String deleteCourse(@PathVariable("idc") Integer idc,HttpSession session,HttpServletResponse response,Model model) {
+		String token=response.getHeader("token");
+		String userName=jwtUtil.extractUsername(token);
 		User user=userRepository.getUserByUsername(userName);
 		try {
 			coursedetails course=coursedetailsRepository.getById(idc);
