@@ -6,6 +6,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpClient.Redirect;
 import java.net.http.HttpHeaders;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
@@ -36,7 +37,7 @@ import org.springframework.web.servlet.resource.DefaultServletHttpRequestHandler
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 import com.courseManager.entities.User;
 import com.courseManager.entities.UserRepository;
@@ -46,6 +47,7 @@ import com.courseManager.jwtToken.jwtutil;
 
 import ch.qos.logback.core.net.SocketConnector.ExceptionHandler;
 import io.jsonwebtoken.lang.Arrays;
+import javax.servlet.http.HttpSession;
 
 
 
@@ -65,7 +67,7 @@ public class MainController {
 	
 	@GetMapping("/token")
 	@ResponseBody
-	public String GenerateToken(@RequestBody AuthDetails authdetails) {
+	public String GenerateToken1(@RequestBody AuthDetails authdetails) {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authdetails.getUsername(), authdetails.getPassword()));
 			
@@ -73,38 +75,26 @@ public class MainController {
 			System.out.println("Invalid username or password");
 			
 		}
-		return jwtUtil.generateToken(authdetails.getUsername());
-		
-		
-	}
-	RestTemplate  rest;
-
-	@PostMapping("/token")
-	public ResponseEntity<?> GenerateToken1(@ModelAttribute AuthDetails authdetails,HttpServletRequest request,HttpServletResponse response) throws Exception {
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authdetails.getUsername(), authdetails.getPassword()));
-			String token=jwtUtil.generateToken(authdetails.getUsername());
-			RestTemplate restTemplate = new RestTemplate();
-			//HttpHeaders headers = new HttpHeade;
-			org.springframework.http.HttpHeaders headers=new org.springframework.http.HttpHeaders();
-			headers.set("Authorization","Bearer "+token); // optional - in case you auth in headers
-			headers.setContentType(MediaType.APPLICATION_JSON);
-			HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-			return restTemplate.exchange("http://localhost:8081/user/home", HttpMethod.GET, entity,String.class);
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.PERMANENT_REDIRECT).location(URI.create("http://localhost:8081/login")).build();
-		}
-			
-
-			
-
-		
+		return jwtUtil.generateToken(authdetails.getUsername());	
 	}
 	
-	private HttpEntity HttpEntity(org.springframework.http.HttpHeaders header) {
-		// TODO Auto-generated method stub
-		return null;
+	
+
+	@PostMapping("/token")
+	public String GenerateToken(@ModelAttribute AuthDetails authdetails,HttpServletRequest request,HttpServletResponse response) throws Exception {
+		    try {
+				authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authdetails.getUsername(), authdetails.getPassword()));
+				String token=jwtUtil.generateToken(authdetails.getUsername());
+				Cookie deleteServletCookie = new Cookie("Authorization", null);
+				deleteServletCookie.setMaxAge(0);
+				response.addCookie(deleteServletCookie);
+				response.addCookie(new Cookie("Authorization", token));
+			    return "redirect:/user/home";
+			} catch (Exception e) {
+				return "redirect:/login";
+			} 	
 	}
+	
 
 	@GetMapping("/home")
 	public String homepage() {
@@ -114,6 +104,7 @@ public class MainController {
 	public String login() {
 		return "login";
 	}
+
 	@GetMapping("/sign_up")
 	public String signup(Model model) {
 		model.addAttribute("user", new User());
@@ -136,8 +127,8 @@ public class MainController {
 			session.setAttribute("message", new Message("This username is already taken !..", "alert-danger"));
 			return "signUp";
 		}
-		
-		
+	}
+	
 	}
 
-}
+

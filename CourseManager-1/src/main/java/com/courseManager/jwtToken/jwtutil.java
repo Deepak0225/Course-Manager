@@ -13,7 +13,7 @@ import java.util.function.Function;
 
 @Component
 public class jwtutil {
-	private String secret = "deepak";
+	private String secret = "jgffxxhhgfgfhghjkc";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

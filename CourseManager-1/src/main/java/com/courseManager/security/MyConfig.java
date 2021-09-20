@@ -49,13 +49,14 @@ public class MyConfig extends WebSecurityConfigurerAdapter {
 		auth.authenticationProvider(authenticationProvider());
 	}
 	
-	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().disable().csrf().disable()
 			.authorizeRequests()
 			.antMatchers("/**").permitAll()
 			.anyRequest().authenticated()
+			.and()
+			.logout().logoutUrl("/logout").logoutSuccessUrl("/login").deleteCookies("auth_code", "Authorization").invalidateHttpSession(true)
 			.and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(jwtfilter, UsernamePasswordAuthenticationFilter.class);		

@@ -98,7 +98,7 @@
 								<th th:text="${c.courseProficiencyLevel}"></th>
 								<th th:text="${c.courseDuration}"></th>
 								<th th:text="${c.courseCompletionDate}"></th>
-								<th><a th:href="@{'/user/more-info/' + ${c.idc}}" class="btn btn-dark btn-md" >
+								<th><a th:href="@{'/user/more_info/' + ${c.idc}}" class="btn btn-dark btn-md" >
 											<i class="fas fa-info-circle"></i></a></th>
 								<th>
 									<form th:action="@{'/user/update-course/' + ${c.idc}}"

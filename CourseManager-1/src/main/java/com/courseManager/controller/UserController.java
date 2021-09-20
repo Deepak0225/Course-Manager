@@ -4,6 +4,7 @@ import java.net.http.HttpRequest;
 import java.security.Principal;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -43,16 +44,17 @@ public class UserController {
 	
 	@Autowired
 	private jwtutil jwtUtil;
-	
-	@Autowired
-	private AuthenticationManager authenticationManager;
-	
-	
-	
-	
+
+
 	@ModelAttribute
-	public void addCommonData(Model model,HttpServletResponse response) {
-		String token=response.getHeader("token");
+	public void addCommonData(Model model,HttpServletRequest request) {
+		String token=null;
+		for (Cookie cookie : request.getCookies()) {
+			if (cookie.getName().equals("Authorization")) {
+				token=cookie.getValue();
+				break;
+			}
+		  }
 		System.out.println(token);
 		if (token!=null) {
 			String userName=jwtUtil.extractUsername(token);
@@ -64,12 +66,17 @@ public class UserController {
 	
 	
 	@GetMapping("/home")
-	public String home(Model model,HttpServletResponse response) {
-		String token=response.getHeader("token");
+	public String home(Model model,HttpServletRequest request) {
+		String token=null;
+		for (Cookie cookie : request.getCookies()) {
+			if (cookie.getName().equals("Authorization")) {
+				token=cookie.getValue();
+				break;
+			}
+		  }
 		String userName=jwtUtil.extractUsername(token);
 		int length=userRepository.getUserByUsername(userName).getCourses().size();
 		model.addAttribute("length", length);
-
 		return "user/home";
 	}
 	
@@ -86,9 +93,15 @@ public class UserController {
 	}
 	
 	@PostMapping("/process_course")
-	public String processCours(@ModelAttribute coursedetails course,HttpServletResponse response,HttpSession session) {
+	public String processCours(@ModelAttribute coursedetails course,HttpServletRequest request,HttpSession session) {
 		try {
-			String token=response.getHeader("token");
+			String token=null;
+		    for (Cookie cookie : request.getCookies()) {
+				if (cookie.getName().equals("Authorization")) {
+					token=cookie.getValue();
+					break;
+				}
+		  	}
 			String userName=jwtUtil.extractUsername(token);
 			User user=userRepository.getUserByUsername(userName);
 			course.setUser(user);
@@ -103,8 +116,14 @@ public class UserController {
 	}
 	
 	@GetMapping("/show-course")
-	public String showCourse(Model model,HttpServletResponse response){
-		String token=response.getHeader("token");
+	public String showCourse(Model model,HttpServletRequest request){
+		String token=null;
+		    for (Cookie cookie : request.getCookies()) {
+				if (cookie.getName().equals("Authorization")) {
+					token=cookie.getValue();
+					break;
+				}
+		  	}
 		String userName=jwtUtil.extractUsername(token);
 		User user=userRepository.getUserByUsername(userName);
 		List<coursedetails> courseList=user.getCourses();
@@ -119,9 +138,15 @@ public class UserController {
 		return "user/update_course";
 	}
 	
-	@RequestMapping("/more-info/{idc}")
-	public String moreInfo(@PathVariable("idc") Integer idc,Model model,HttpServletResponse response,HttpSession session){
-		String token=response.getHeader("token");
+	@RequestMapping("/more_info/{idc}")
+	public String moreInfo(@PathVariable("idc") Integer idc,Model model,HttpServletRequest request,HttpSession session){
+		String token=null;
+		    for (Cookie cookie : request.getCookies()) {
+				if (cookie.getName().equals("Authorization")) {
+					token=cookie.getValue();
+					break;
+				}
+		  	}
 		String userName=jwtUtil.extractUsername(token);
 		User user=userRepository.getUserByUsername(userName);
 		try {
@@ -145,11 +170,16 @@ public class UserController {
 	}
 	
 	@PostMapping("/process_update")
-	public String processUpdate(@ModelAttribute coursedetails course,HttpServletResponse response,Model model,HttpSession session) {
+	public String processUpdate(@ModelAttribute coursedetails course,HttpServletRequest request,Model model,HttpSession session) {
 		
 		try {
-			coursedetails oldCourse=coursedetailsRepository.getById(course.getIdc());
-			String token=response.getHeader("token");
+			String token=null;
+		    for (Cookie cookie : request.getCookies()) {
+				if (cookie.getName().equals("Authorization")) {
+					token=cookie.getValue();
+					break;
+				}
+		  	}
 			String userName=jwtUtil.extractUsername(token);
 			User user=userRepository.getUserByUsername(userName);
 			course.setUser(user);
@@ -165,8 +195,14 @@ public class UserController {
 		}
 	}
 	@RequestMapping("/delete-course/{idc}")
-	public String deleteCourse(@PathVariable("idc") Integer idc,HttpSession session,HttpServletResponse response,Model model) {
-		String token=response.getHeader("token");
+	public String deleteCourse(@PathVariable("idc") Integer idc,HttpSession session,HttpServletRequest request,Model model) {
+		String token=null;
+		    for (Cookie cookie : request.getCookies()) {
+				if (cookie.getName().equals("Authorization")) {
+					token=cookie.getValue();
+					break;
+				}
+		  	}
 		String userName=jwtUtil.extractUsername(token);
 		User user=userRepository.getUserByUsername(userName);
 		try {
