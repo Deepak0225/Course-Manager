@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +17,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.courseManager.helper.Message;
 import com.courseManager.jwtToken.jwtutil;
 
 
@@ -25,7 +27,6 @@ public class jwtFilter extends OncePerRequestFilter {
 	@Autowired
 	private jwtutil jwtUtil;
 
-	
 	@Autowired
 	private CustomUserDerailsImplement service;
 
@@ -33,7 +34,9 @@ public class jwtFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		String authorizationHeader = request.getHeader("Authorization");
-		System.out.println(authorizationHeader);
+		
+		System.out.println(request.getRequestURL()+" "+request.getUserPrincipal()+" "+request.getHeader("ok")+" "+request.getHeader("parameters"));
+		
 		String token=null;
 		String username = null;
 		if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {

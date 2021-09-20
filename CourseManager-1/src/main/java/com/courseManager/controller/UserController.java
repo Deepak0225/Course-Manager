@@ -78,6 +78,7 @@ public class UserController {
 		return "user/profile";
 	}
 	
+	
 	@GetMapping("/add-course")
 	public String add_course(Model model) {
 		model.addAttribute("course",new coursedetails());
