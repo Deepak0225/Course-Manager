@@ -38,7 +38,7 @@ public class ForgotController {
 			String username1=username;
 			//Message ....
 			String message="your OTP to reset password of Course Manager account with username as "
-							+"<h1"
+							+"<h1>"
 							+username1
 							+"</h1>"
 							+" is "
