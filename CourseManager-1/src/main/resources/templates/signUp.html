@@ -25,7 +25,10 @@
 <script
 	src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+	integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container-fluid">
@@ -41,17 +44,19 @@
 					<li class="nav-item"><a class="nav-link active"
 						aria-current="page" th:href="@{/home}"><i class="fas fa-home"></i>Home</a></li>
 					<li class="nav-item"><a class="nav-link active"
-						aria-current="page" th:href="@{/about_us}"><i class="fas fa-address-card"></i> About Us</a></li>
+						aria-current="page" th:href="@{/about_us}"><i
+							class="fas fa-address-card"></i> About Us</a></li>
 				</ul>
 				<div class="d-flex">
-					<a class="btn btn-outline-light me-2" th:href="@{/login}"><i class="fas fa-sign-in-alt"></i> Login</a>
-					<a class="btn btn-outline-light me-2" th:href="@{/sign_up}"><i class="fas fa-user-plus"></i> Sign
-						Up</a>
+					<a class="btn btn-outline-light me-2" th:href="@{/login}"><i
+						class="fas fa-sign-in-alt"></i> Login</a> <a
+						class="btn btn-outline-light me-2" th:href="@{/sign_up}"><i
+						class="fas fa-user-plus"></i> Sign Up</a>
 				</div>
 			</div>
 		</div>
 	</nav>
-	<div class="container mt-2">
+	<div class="container-fluid mt-2">
 		<div class="row justify-content-center">
 			<div th:if="${session.message}"
 				th:classappend="${session.message.type}" class="alert" role="alert">
@@ -59,14 +64,14 @@
 				<th:block th:text="${#session.removeAttribute('message')}">
 				</th:block>
 			</div>
-			<div class="card">
-				<div class="col-md-6">
+			<div class="card ">
+				<div class="col-md-6 mx-auto">
 					<header class="card-header">
 						<a th:href="@{/login}"
 							class="float-right btn btn-outline-primary mt-1">Log in</a>
 						<h4 class="card-title mt-2">Sign up</h4>
 					</header>
-					<article class="card-body">
+					<div class="card-body ">
 						<form th:action="@{/process_user}" method="post">
 							<div class="form-row">
 								<div class="col form-group">
@@ -96,8 +101,17 @@
 							<!-- form-group end.// -->
 							<!-- form-row.// -->
 							<div class="form-group">
-								<label>Create password</label> <input class="form-control"
-									name="password" type="password" required>
+								<label>Password</label> <input class="form-control"
+									id="password" name="password" type="password" required>
+							</div>
+
+							<!-- form-row.// -->
+							<div class="form-group">
+								<label>Confirm password</label> <input class="form-control"
+									id="confirm_password" onkeyup='check();'
+									name="confirm_password" type="password" required>
+								<p id='message'></p>
+
 							</div>
 							<!-- form-group end.// -->
 							<div class="form-group">
@@ -105,7 +119,7 @@
 									Register</button>
 							</div>
 						</form>
-					</article>
+					</div>
 					<!-- card-body end .// -->
 					<div class="border-top card-body text-center">
 						Have an account? <a th:href="@{/login}">Log In</a>
@@ -121,6 +135,20 @@
 
 	</div>
 	<!--container end.//-->
+
+	<script type="text/javascript">
+		var check = function() {
+			if (document.getElementById('password').value == document
+					.getElementById('confirm_password').value) {
+				document.getElementById('message').style.color = 'white';
+				document.getElementById('message').innerHTML = '';
+
+			} else {
+				document.getElementById('message').style.color = 'red';
+				document.getElementById('message').innerHTML = 'Should be same as password';
+			}
+		}
+	</script>
 </body>
 
 </html>

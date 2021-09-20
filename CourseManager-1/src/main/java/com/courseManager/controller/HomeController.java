@@ -1,5 +1,7 @@
 package com.courseManager.controller;
 
+import java.util.Random;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +15,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.courseManager.emailService.EmailService;
 import com.courseManager.entities.User;
 import com.courseManager.entities.UserRepository;
 import com.courseManager.helper.Message;
 
 
 @Controller
-public class MainController {
+public class HomeController {
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -55,7 +58,8 @@ public class MainController {
 			return "signUp";
 		}
 		
-		
 	}
+	
+	
 
 }
