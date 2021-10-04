@@ -18,7 +18,7 @@ public class EmailService {
 	public String sendEmain(String subject,String Message,String to) {
 		//variable for gmail
 		String host="smtp.gmail.com";
-		String from="noreply.coursemanage@gmail.com";
+		String from="xyz@gmail.com";
 		Properties property= System.getProperties();
 		
 		// setting imp information to properties object
@@ -38,7 +38,7 @@ public class EmailService {
 
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(from,"*&La*&1994*&2502");
+				return new PasswordAuthentication(from,"password");
 			}
 			
 		});
