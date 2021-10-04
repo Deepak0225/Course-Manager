@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.courseManager.entities.User;
 import com.courseManager.entities.UserRepository;
@@ -22,6 +23,7 @@ import com.courseManager.helper.Message;
 
 @Controller
 @RequestMapping("/user")
+
 public class UserController {
 	
 	@Autowired
@@ -29,12 +31,18 @@ public class UserController {
 	
 	@Autowired
 	private coursedetailsRepository coursedetailsRepository;
-	
+	/*
 	@ModelAttribute
 	public void addCommonData(Model model,Principal principal) {
 		String userName=principal.getName();
 		User user=userRepository.getUserByUsername(userName);
 		model.addAttribute("user", user);
+	}
+	*/
+	@GetMapping("/private")
+	@ResponseBody
+	public String privatemethode(){
+		return "Private page";
 	}
 	@GetMapping("/home")
 	public String home(Model model,Principal principal) {

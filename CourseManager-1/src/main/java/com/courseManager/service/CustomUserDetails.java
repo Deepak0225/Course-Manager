@@ -1,4 +1,4 @@
-package com.courseManager.security;
+package com.courseManager.service;
 
 import java.util.Collection;
 
